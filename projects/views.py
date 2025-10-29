@@ -11,11 +11,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset= Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [AllowAny]
-    
-    def perform_create(self, serializer):
-      serializer.save(owner_id=1)  
 
-        
+    def perform_create(self, serializer):
+        serializer.save(owner_id=1)
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
