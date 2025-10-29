@@ -5,21 +5,37 @@ from .models import UserProfile, Project, Task, Comment
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id','username','email']
-        
+        fields = ['id', 'username', 'email']
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+
     class Meta:
-        model =UserProfile
-        fields = ['id','user','role','phone','bio']
+        model = UserProfile
+        fields = ['id', 'user', 'role', 'phone', 'bio']
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            validated_data['user'] = user
+        else:
+            raise serializers.ValidationError("User must be logged in to create profile.")
+        return super().create(validated_data)
         
 class CommentSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
+    author = serializers.StringRelatedField(read_only=True)  
     class Meta:
         model = Comment
-        fields = ['id', 'content', 'created_at', 'task', 'author']
+        fields = ['task', 'content', 'author']
 
+    def create(self, validated_data):
+        user = self.context['request'].user
+        if user.is_authenticated: 
+            validated_data['author'] = user
+        else:
+            validated_data['author'] = None  
+        return super().create(validated_data)
+    
 class TaskSerializer(serializers.ModelSerializer):
     assigned_to = UserSerializer(read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
