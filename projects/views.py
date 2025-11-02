@@ -24,9 +24,22 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all()
+    # queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        project_pk =self.kwargs.get('project_pk')
+        
+        if project_pk:
+            return Task.objects.filter(project_id=project_pk)
+        return Task.objects.all()
+    
+    def perform_create(self, serializer):
+        if not self.request.data.get('assigned_to_id')and not self.request.data.get('assigned_to'):
+            serializer.save(assigned_to=self.request.user) 
+        else:
+            serializer.save()
     
     
 class CommentViewSet(viewsets.ModelViewSet):
