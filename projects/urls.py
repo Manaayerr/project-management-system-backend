@@ -10,7 +10,6 @@ from .views import (
 
 router = routers.DefaultRouter()
 router.register('projects', ProjectViewSet)
-router.register('tasks', TaskViewSet)
 router.register('comments', CommentViewSet)
 router.register('profiles', UserProfileViewSet)
 
