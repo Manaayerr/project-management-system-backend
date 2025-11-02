@@ -63,8 +63,12 @@ class TaskSerializer(serializers.ModelSerializer):
     assigned_to = UserSerializer(read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
     
+
     assigned_to_id = serializers.PrimaryKeyRelatedField(
-        source ='assigend_to',queryset=User.objects.all(), write_only=True, required=False
+        source ='assigned_to', 
+        queryset=User.objects.all(), 
+        write_only=True, 
+        required=False
     )
     
     project_id = serializers.PrimaryKeyRelatedField(
@@ -73,18 +77,18 @@ class TaskSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Task
-fields = [
+        fields = [
             'id', 
             'title', 
             'due_date', 
             'status', 
-            'project_id',     
-            'assigned_to',    
+            'project_id', 
+            'assigned_to',
             'assigned_to_id', 
             'created_at', 
             'updated_at', 
             'comments'
-        ]        
+        ]
 # -------------------------------------------------------------------------------------------------------------------------
 
 class ProjectSerializer(serializers.ModelSerializer):
