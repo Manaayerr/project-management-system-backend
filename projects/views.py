@@ -36,9 +36,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         return Task.objects.all()
     
     def perform_create(self, serializer):
-        if not self.request.data.get('assigned_to_id')and not self.request.data.get('assigned_to'):
-            serializer.save(assigned_to=self.request.user) 
-        else:
             serializer.save()
     
     

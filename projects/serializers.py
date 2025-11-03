@@ -63,12 +63,12 @@ class TaskSerializer(serializers.ModelSerializer):
     assigned_to = UserSerializer(read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
     
-
     assigned_to_id = serializers.PrimaryKeyRelatedField(
         source ='assigned_to', 
         queryset=User.objects.all(), 
         write_only=True, 
-        required=False
+        required=False,
+        allow_null=True 
     )
     
     project_id = serializers.PrimaryKeyRelatedField(
